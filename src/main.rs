@@ -38,7 +38,13 @@ async fn main() {
         clear_background(SKYBLUE);
 
         // Draw your game here
-        draw_text("Hello, Space Invaders!", 0.0, 20.0, 30.0, WHITE);
+        draw_text(
+            "Hello, Space Invaders! Use arrow keys to move, and space to restart.",
+            0.0,
+            20.0,
+            30.0,
+            WHITE,
+        );
 
         if !game_over {
             // Handle input

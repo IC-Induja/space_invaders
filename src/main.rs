@@ -12,17 +12,18 @@ async fn main() {
         draw_text("Hello, Space Invaders!", 0.0, 20.0, 30.0, WHITE);
 
         // Handle input
+        // You can use HJKL or arrow keys to move
         let delta_time = get_frame_time();
-        if is_key_down(KeyCode::Left) {
+        if is_key_down(KeyCode::Left) || is_key_down(KeyCode::H) {
             x -= MOVE_SPEED * delta_time;
         }
-        if is_key_down(KeyCode::Right) {
+        if is_key_down(KeyCode::Right) || is_key_down(KeyCode::L) {
             x += MOVE_SPEED * delta_time;
         }
-        if is_key_down(KeyCode::Up) {
+        if is_key_down(KeyCode::Up) || is_key_down(KeyCode::K) {
             y -= MOVE_SPEED * delta_time;
         }
-        if is_key_down(KeyCode::Down) {
+        if is_key_down(KeyCode::Down) || is_key_down(KeyCode::J) {
             y += MOVE_SPEED * delta_time;
         }
 

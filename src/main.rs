@@ -75,7 +75,6 @@ async fn main() {
     };
 
     loop {
-        clear_background(SKYBLUE);
         if let (Some(material), Some(render_target)) = (&material, &render_target) {
             draw_shader(material, direction_modifier, render_target);
         }

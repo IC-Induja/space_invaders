@@ -1,4 +1,5 @@
 use macroquad::prelude::*;
+use std::fs;
 
 struct Shape {
     x: f32,
@@ -26,6 +27,10 @@ impl Shape {
 #[macroquad::main("🚀 Space Invaders")]
 async fn main() {
     rand::srand(miniquad::date::now() as u64);
+    let mut score = 0;
+    let mut high_score = fs::read_to_string("high_score.dat")
+        .map_or(Ok(0), |s| s.trim().parse::<u32>())
+        .unwrap_or(0);
     const MOVE_SPEED: f32 = 200.0;
     let mut squares = vec![];
     let mut bullets = vec![];
@@ -39,15 +44,6 @@ async fn main() {
     let mut game_over = false;
     loop {
         clear_background(SKYBLUE);
-
-        // Draw your game here
-        draw_text(
-            "Hello, Space Invaders! Use arrow keys to move, and space to restart.",
-            0.0,
-            20.0,
-            30.0,
-            WHITE,
-        );
 
         if !game_over {
             // Handle input
@@ -113,6 +109,9 @@ async fn main() {
 
             // Check for collisions between player and squares
             if squares.iter().any(|square| square.collides_with(&circle)) {
+                if score == high_score {
+                    fs::write("high_score.dat", score.to_string()).ok();
+                }
                 game_over = true;
             }
 
@@ -122,10 +121,25 @@ async fn main() {
                     if bullet.collides_with(square) {
                         square.collided = true;
                         bullet.collided = true;
+                        score += square.size.round() as u32;
+                        high_score = high_score.max(score);
                     }
                 }
             }
         }
+        // Draw the score
+        // Current score on the left and high score on the right
+        let score_text = format!("Score: {}", score);
+        let high_score_text = format!("High Score: {}", high_score);
+        let high_score_dimensions = measure_text(&high_score_text, None, 20, 1.0);
+        draw_text(&score_text, 10.0, 20.0, 20.0, WHITE);
+        draw_text(
+            &high_score_text,
+            screen_width() - high_score_dimensions.width - 10.0,
+            20.0,
+            20.0,
+            WHITE,
+        );
 
         // Draw a circle at the current position
         draw_circle(circle.x, circle.y, 16.0, YELLOW);
@@ -164,6 +178,7 @@ async fn main() {
             game_over = false;
             squares.clear();
             bullets.clear();
+            score = 0;
             circle.x = screen_width() / 2.0;
             circle.y = screen_height() / 2.0;
         }

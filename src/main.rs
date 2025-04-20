@@ -23,7 +23,15 @@ impl Shape {
     }
 }
 
-#[macroquad::main("🚀 Space Invaders")]
+fn game_config() -> Conf {
+    Conf {
+        window_title: "🚀 Space Invaders".to_owned(),
+        fullscreen: true,
+        ..Default::default()
+    }
+}
+
+#[macroquad::main(game_config)]
 async fn main() {
     rand::srand(miniquad::date::now() as u64);
     const MOVE_SPEED: f32 = 200.0;
